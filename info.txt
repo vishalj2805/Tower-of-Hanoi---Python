@@ -1,0 +1,3 @@
+Stack - Last In First Out --LIFO
+Queue - First In First Out --FIFO
+Deque - Both Ways
