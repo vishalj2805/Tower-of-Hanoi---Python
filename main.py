@@ -1,8 +1,6 @@
 import random
 
-
-def console_presentation(positions: dict[str, list[str]]):
-    disks = {"disk_1":"#1#",
+disks = {"disk_1":"#1#",
              "disk_2":"##2#",
              "disk_3":"##3##",
              "disk_4":"###4##",
@@ -12,6 +10,10 @@ def console_presentation(positions: dict[str, list[str]]):
              "disk_8":"#####8####",
              "disk_9":"#####9#####"
              }
+
+
+def console_presentation(positions: dict[str, list[str]]):
+
 
     towers = list(positions.keys())
 
@@ -42,20 +44,52 @@ def starting_position(number_of_disks: int):
 
     return towers
 
+def make_move(positioning: dict[str, list[str]]):
+    print("\n")
+    tower_1_upper_disk = "No Disc" if (len(positioning["tower_1"]) == 0) else positioning["tower_1"][-1]
+    tower_2_upper_disk = "No Disc" if (len(positioning["tower_2"]) == 0) else positioning["tower_2"][-1]
+    tower_3_upper_disk = "No Disc" if (len(positioning["tower_3"]) == 0) else positioning["tower_3"][-1]
+    print(tower_1_upper_disk)
+    print(tower_2_upper_disk)
+    print(tower_3_upper_disk)
+
+    for tower in range(1,4):
+
+
+        option = 1
+        if tower_1_upper_disk != "No Disc":
+            if tower_2_upper_disk == "No Disc":
+                print(f"Press {option}: Move {tower_1_upper_disk} in Tower 2")
+                option += 1
+            elif tower_1_upper_disk.split("_")[-1] < tower_2_upper_disk.split("_")[-1]:
+                print(f"Press {option}: Move {tower_1_upper_disk} above {tower_2_upper_disk}")
+                option += 1
+
+            if tower_3_upper_disk != "No Disc":
+                if tower_3_upper_disk == "No Disc":
+                    print(f"Press {option}: Move {tower_1_upper_disk} in Tower 3")
+                    option += 1
+                elif tower_1_upper_disk.split("_")[-1] < tower_3_upper_disk.split("_")[-1]:
+                    print(f"Press {option}: Move {tower_1_upper_disk} above {tower_3_upper_disk}")
+                    option += 1
+
+
+
+
+
+
+
 
 
 
 def hanoi_game(number_of_disks):
-    pass
+    position = starting_position(number_of_disks)
+    console_presentation(position)
+    make_move(position)
 
 
 
 # disks = input("Enter Number of disks: ")
 
-# positioning = {"tower_1":["disk_6", "disk_7", "disk_5", "disk_2", "disk_1"],
-#                "tower_2":["disk_3"],
-#                "tower_3":["disk_4", "disk_8", "disk_9"]
-#                }
-#
-console_presentation(starting_position(9))
+hanoi_game(9)
 
