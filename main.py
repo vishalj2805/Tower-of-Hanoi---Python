@@ -51,6 +51,7 @@ def select_option(positioning: dict[str, list[str]]):
         "tower_3_upper_disk":"No Disc" if (len(positioning["tower_3"]) == 0) else positioning["tower_3"][-1]
     }
 
+
     option = 1
     move_disk = []
     for tower_no in range(1,4):
@@ -60,7 +61,7 @@ def select_option(positioning: dict[str, list[str]]):
         if towers_upper_disk[f"tower_{tower_no}_upper_disk"] != "No Disc":
             for other_tower in other_tower_no:
                 if towers_upper_disk[f"tower_{other_tower}_upper_disk"] == "No Disc":
-                    action = f"Press {option}: Move {towers_upper_disk[f"tower_{tower_no}_upper_disk"]} in Tower {other_tower}"
+                    action = f"Press {option}: Move {towers_upper_disk[f"tower_{tower_no}_upper_disk"]} in tower_{other_tower}"
                     print(action)
                     move_disk.append(action)
                     option += 1
@@ -73,20 +74,34 @@ def select_option(positioning: dict[str, list[str]]):
 
 
     option_selected = input("Select from above options: ")
-    option_selected = str([move for move in move_disk if f"Press {option_selected}" in move])
+    option_selected = [move for move in move_disk if f"Press {option_selected}" in move][0]
     print("Selected Option: " + option_selected)
 
-    make_move(option_selected, positioning)
-
-
-def make_move(option_selected, positioning):
-    print("=" *50)
+    return make_move(option_selected, positioning)
 
 
 
+def make_move(option_selected: str, positioning: dict[str, list[str]]):
+    print("=" *100)
+    source_disk, destination_disk = [word for word in option_selected.split(" ") if "disk_" in word or "tower_" in word]
+    print(source_disk)
+    print(destination_disk)
+
+    disk_to_move = ""
+    to_tower = ""
+    for key in positioning.keys():
+        if not positioning.get(key) and key != destination_disk:
+            continue
+
+        if key == destination_disk or positioning.get(key)[-1] == destination_disk:
+            to_tower = key
+        elif not positioning.get(key) or positioning.get(key)[-1] == source_disk:
+            disk_to_move = positioning.get(key).pop()
+
+    positioning.get(to_tower).append(disk_to_move)
 
 
-
+    return positioning
 
 
 
@@ -96,17 +111,20 @@ def make_move(option_selected, positioning):
 def hanoi_game(number_of_disks):
     position = starting_position(number_of_disks)
 
-    # position = {"tower_1":["disk_1", "disk_2", "disk_3", "disk_4"],
-    #             "tower_2": ["disk_5", "disk_6", "disk_7", "disk_8", "disk_9"],
-    #             "tower_3": []
-    #             }
+    while True:
+        console_presentation(position)
+        position = select_option(position)
 
-    console_presentation(position)
-    select_option(position)
-
-
+#
+# position = {"tower_1":[],
+#             "tower_2": ["disk_6", "disk_2"],
+#             "tower_3": ["disk_4", "disk_7", "disk_5", "disk_9", "disk_8", "disk_3", "disk_1"]
+#             }
 
 # disks = input("Enter Number of disks: ")
 
-hanoi_game(9)
+hanoi_game(5)
 
+# console_presentation(make_move("Move disk_4 above disk_9", position))
+# console_presentation(position)
+# console_presentation(select_option(position))
