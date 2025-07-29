@@ -1,15 +1,15 @@
 import random
 
 disks = {"disk_1":"#1#",
-             "disk_2":"##2#",
-             "disk_3":"##3##",
-             "disk_4":"###4##",
-             "disk_5":"###5###",
-             "disk_6":"####6###",
-             "disk_7":"####7####",
-             "disk_8":"#####8####",
-             "disk_9":"#####9#####"
-             }
+         "disk_2":"##2#",
+         "disk_3":"##3##",
+         "disk_4":"###4##",
+         "disk_5":"###5###",
+         "disk_6":"####6###",
+         "disk_7":"####7####",
+         "disk_8":"#####8####",
+         "disk_9":"#####9#####"
+         }
 
 
 def console_presentation(positions: dict[str, list[str]]):
@@ -44,34 +44,45 @@ def starting_position(number_of_disks: int):
 
     return towers
 
-def make_move(positioning: dict[str, list[str]]):
+def select_option(positioning: dict[str, list[str]]):
     print("\n")
-    tower_1_upper_disk = "No Disc" if (len(positioning["tower_1"]) == 0) else positioning["tower_1"][-1]
-    tower_2_upper_disk = "No Disc" if (len(positioning["tower_2"]) == 0) else positioning["tower_2"][-1]
-    tower_3_upper_disk = "No Disc" if (len(positioning["tower_3"]) == 0) else positioning["tower_3"][-1]
-    print(tower_1_upper_disk)
-    print(tower_2_upper_disk)
-    print(tower_3_upper_disk)
+    towers_upper_disk = {"tower_1_upper_disk": "No Disc" if (len(positioning["tower_1"]) == 0) else positioning["tower_1"][-1],
+        "tower_2_upper_disk":"No Disc" if (len(positioning["tower_2"]) == 0) else positioning["tower_2"][-1],
+        "tower_3_upper_disk":"No Disc" if (len(positioning["tower_3"]) == 0) else positioning["tower_3"][-1]
+    }
 
-    for tower in range(1,4):
+    option = 1
+    move_disk = []
+    for tower_no in range(1,4):
+        other_tower_no = [*range(1,4)]
+        other_tower_no.remove(tower_no)
 
-
-        option = 1
-        if tower_1_upper_disk != "No Disc":
-            if tower_2_upper_disk == "No Disc":
-                print(f"Press {option}: Move {tower_1_upper_disk} in Tower 2")
-                option += 1
-            elif tower_1_upper_disk.split("_")[-1] < tower_2_upper_disk.split("_")[-1]:
-                print(f"Press {option}: Move {tower_1_upper_disk} above {tower_2_upper_disk}")
-                option += 1
-
-            if tower_3_upper_disk != "No Disc":
-                if tower_3_upper_disk == "No Disc":
-                    print(f"Press {option}: Move {tower_1_upper_disk} in Tower 3")
+        if towers_upper_disk[f"tower_{tower_no}_upper_disk"] != "No Disc":
+            for other_tower in other_tower_no:
+                if towers_upper_disk[f"tower_{other_tower}_upper_disk"] == "No Disc":
+                    action = f"Press {option}: Move {towers_upper_disk[f"tower_{tower_no}_upper_disk"]} in Tower {other_tower}"
+                    print(action)
+                    move_disk.append(action)
                     option += 1
-                elif tower_1_upper_disk.split("_")[-1] < tower_3_upper_disk.split("_")[-1]:
-                    print(f"Press {option}: Move {tower_1_upper_disk} above {tower_3_upper_disk}")
+                elif towers_upper_disk[f"tower_{tower_no}_upper_disk"].split("_")[-1] < towers_upper_disk[f"tower_{other_tower}_upper_disk"].split("_")[-1]:
+                    action = f"Press {option}: Move {towers_upper_disk[f"tower_{tower_no}_upper_disk"]} above {towers_upper_disk[f"tower_{other_tower}_upper_disk"]}"
+                    print(action)
+                    move_disk.append(action)
                     option += 1
+
+
+
+    option_selected = input("Select from above options: ")
+    option_selected = str([move for move in move_disk if f"Press {option_selected}" in move])
+    print("Selected Option: " + option_selected)
+
+    make_move(option_selected, positioning)
+
+
+def make_move(option_selected, positioning):
+    print("=" *50)
+
+
 
 
 
@@ -84,8 +95,14 @@ def make_move(positioning: dict[str, list[str]]):
 
 def hanoi_game(number_of_disks):
     position = starting_position(number_of_disks)
+
+    # position = {"tower_1":["disk_1", "disk_2", "disk_3", "disk_4"],
+    #             "tower_2": ["disk_5", "disk_6", "disk_7", "disk_8", "disk_9"],
+    #             "tower_3": []
+    #             }
+
     console_presentation(position)
-    make_move(position)
+    select_option(position)
 
 
 
